@@ -1,6 +1,6 @@
 //Global Variables
 const guessedLettersElement = document.querySelector(".guessed-letters");
-const guessButton = document.querySelector(".guess");
+const guessLetterButton = document.querySelector(".guess");
 const letterInput = document.querySelector(".letter");
 const wordInProgress = document.querySelector(".word-in-progress");
 const remainingGuessesElement = document.querySelector(".remaining");
@@ -9,8 +9,8 @@ const messageParagraph = document.querySelector(".message");
 const playAgainButton = document.querySelector(".play-again");
 
 let word = "magnolia";
-const guessedLetters = [];
-let remainingGuesses = 8;
+let guessedLetters = [];
+let remainingGuesses = 5;
 
 const getWord = async function () {
   const response = await fetch("https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt");
@@ -33,7 +33,7 @@ const placeholder = function (word) {
   wordInProgress.innerText = placeholderLetters.join("");
 };
 
-guessButton.addEventListener("click", function (e) {
+guessLetterButton.addEventListener("click", function (e) {
   e.preventDefault();
   //Empty message paragraph
   messageParagraph.innerText = "";
@@ -123,5 +123,28 @@ const checkToWin = function () {
   if (word.toUpperCase() === wordInProgress.innerText) {
     messageParagraph.classList.add("win");
     messageParagraph.innerHTML = `<p class="highlight">You guessed the correct word! Congrats you smartass!</p>`;
+    startOver();
   }
 };
+
+const startOver = function () {
+  guessLetterButton.classList.add("hide");
+  remainingGuessesElement.classList.add("hide");
+  guessedLettersElement.classList.add("hide");
+  playAgainButton.classList.remove("hide");
+};
+
+playAgainButton.addEventListener("click", function() {
+  messageParagraph.classList.remove("win");
+  guessedLetters = [];
+  remainingGuesses = 5;
+  remainingGuessesSpan.innerText = `You only have ${remainingGuesses} guesses remaining. Make them count!`;
+  guessedLettersElement.innerHTML = "";
+  messageParagraph.innerText = "";
+  getWord();
+
+  guessLetterButton.classList.remove("hide");
+  playAgainButton.classList.add("hide");
+  remainingGuessesElement.classList.remove("hide");
+  guessedLettersElement.classList.remove("hide");
+});
